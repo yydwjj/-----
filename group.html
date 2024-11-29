@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>图片展示</title>
+    <style>
+        /* 添加一些样式 */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            padding: 2em;
+            flex-direction: column;
+            width: 1400px;
+            height: 1000px;
+            margin: 0 auto;
+        }
+        .container {
+            display: flex;
+            align-items: flex-start;
+            width: 130%;
+            height: 100%;
+        }
+        iframe {
+            max-width: 100%;
+            height: 100%;
+        }
+        .caption {
+            font-size: 26px;
+            color: #333;
+            margin-top: 1em;
+            text-align: center;
+        }
+        .legend {
+            font-size: 10px;
+            color: #777;
+            margin-top: 0.5em;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 20px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5em;
+        }
+        .label {
+            font-size: 1em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- 标题 -->
+    <h1 class="caption">The geographic distribution of the region where the arbovirus was discovered</h1>
+    <div class="container">
+        <!-- 图片 -->
+        <!-- <img src="C:\Users\28273\Desktop\bird\MapData\map3.png" alt="描述性文字"> -->
+        <iframe src="11_6_2.html" id="ifr1" frameborder="0" width="100%" height="100%"></iframe>
+         <!-- 图例 -->
+         <div class="legend">  
+            <h1>Virus family</h1>  
+            <!-- Flaviviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #63b2ee;"></div>  
+                <span class="label">Flaviviridae</span>  
+            </div>  
+          
+            <!-- Peribunyaviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #76da91;"></div>  
+                <span class="label">Peribunyaviridae</span>  
+            </div>  
+          
+            <!-- Togaviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #f8cb7f;"></div>  
+                <span class="label">Togaviridae</span>  
+            </div>  
+          
+            <!-- Reoviridae -->  
+            <!-- 注意：原数据中未提供Reoviridae对应的颜色，但提供了Reovirales，这里假设使用Reovirales的颜色 -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #f89588;"></div>  
+                <span class="label">Reovirales</span>  
+            </div>  
+          
+            <!-- Nairoviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #7cd6cf;"></div>  
+                <span class="label">Nairoviridae</span>  
+            </div>  
+          
+            <!-- Phenuiviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #9192ab;"></div>  
+                <span class="label">Phenuiviridae</span>  
+            </div>  
+          
+            <!-- Rhabdoviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #7898e1;"></div>  
+                <span class="label">Rhabdoviridae</span>  
+            </div>  
+          
+            <!-- Orthomyxoviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #efa666;"></div>  
+                <span class="label">Orthomyxoviridae</span>  
+            </div>  
+          
+            <!-- Asfarviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #eddd86;"></div>  
+                <span class="label">Asfarviridae</span>  
+            </div>  
+          
+            <!-- Totivirus -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #9987ce;"></div>  
+                <span class="label">Totivirus</span>  
+            </div>  
+          
+            <!-- Elliovirales -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #63b2ee;"></div>  
+                <span class="label">Elliovirales</span>  
+            </div>  
+          
+            <!-- Poxviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #76da91;"></div>  
+                <span class="label">Poxviridae</span>  
+            </div>  
+          
+            <!-- Nodaviridae -->  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: #A7D8F9;"></div>  
+                <span class="label">Nodaviridae</span>  
+            </div>  
+
+            <h1>Virus Line</h1>  
+            <div class="legend-item">  
+                <div class="color-box" style="background-color:rgba(184, 59, 95, 0.2);"></div>  
+                <span class="label">West Nile virus</span>  
+            </div> 
+            <div class="legend-item">  
+                <div class="color-box" style="background-color: rgba(102,57,166,0.2);"></div>  
+                <span class="label">Japanese encephalitis virus</span>  
+            </div>  
+        </div>
+    </div>
+</body>
+<script>
+    // 获取 iframe 元素
+let iframe = document.getElementById("ifr1");
+
+// 确保 iframe 加载完成后获取其内容
+iframe.onload = function() {
+    let iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+    // 获取包含复选框和文字的所有label元素
+    let labels = iframeDocument.querySelectorAll("div.leaflet-control-layers-overlays label");
+
+    labels.forEach(label => {
+        let checkbox = label.querySelector("input[type='checkbox']");
+        let text = label.querySelector("span:last-child").innerText;
+
+        // 输出复选框状态和文本内容
+        console.log("Checkbox checked:", checkbox.checked);
+        console.log("Label text:", text);
+    });
+};
+</script>
+</html>

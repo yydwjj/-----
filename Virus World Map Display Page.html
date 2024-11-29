@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virus World Map</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            min-width: 800px;
+            min-height: 600px;
+            display: flex;
+        }
+        .toolbar {
+            width: 20%; /* 2/10 of the container width */
+            max-width: 250px; /* Maximum width for the toolbar */
+            padding: 20px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: stretch;
+        }
+        .toolbar-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .toolbar-item {
+            border: 1px solid #e0e0eb;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .toolbar-item-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .toolbar select, .toolbar input[type="range"], .toolbar button, .toolbar select.language-select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .content {
+            width: 80%; /* 8/10 of the container width */
+            height: 100%;
+            position: relative;
+        }
+        #map-container {
+            width: 100%;
+            height: 100%;
+            background-color: #e0e0eb; /* Pure color block representing the map */
+        }
+        #chart-container {
+            width: 100%;
+            padding: 20px;
+            display: none;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <div class="toolbar-title"></div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Layer Selector</div>
+                <select id="layer-selector">
+                    <option value="total-viruses">Total Virus Count Layer</option>
+                    <option value="virus-families">Virus Family Distribution Layer</option>
+                </select>
+            </div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Time Slider</div>
+                <input type="range" id="time-slider" min="2000" max="2023" value="2023">
+                <span id="year-label">2023</span>
+            </div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Comparison Tool</div>
+                <button onclick="toggleComparison()">Comparison Tool</button>
+            </div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Language</div>
+                <select class="language-select" id="language-selector" onchange="changeLanguage()">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+        </div>
+        <div class="content">
+            <div id="map-container">
+                <iframe id="embedded-map" src="major_map.html" width="100%" height="100%"></iframe>
+            </div>
+            <div id="chart-container">
+                <canvas id="comparison-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const translations = {
+                en: {
+                    title: "Virus World Map",
+                    layerSelectorLabel: "Layer Selector",
+                    timeSliderLabel: "Time Slider",
+                    comparisonToolButton: "Comparison Tool",
+                    languageLabel: "Language"
+                },
+                zh: {
+                    title: "病毒世界地图",
+                    layerSelectorLabel: "图层选择器",
+                    timeSliderLabel: "时间滑块",
+                    comparisonToolButton: "比较工具",
+                    languageLabel: "语言"
+                }
+            };
+
+            function changeLanguage() {
+                const selectedLang = document.getElementById('language-selector').value;
+                document.title = translations[selectedLang].title;
+
+                // Update labels
+                document.querySelectorAll('.toolbar-item-label')[0].textContent = translations[selectedLang].layerSelectorLabel;
+                document.querySelectorAll('.toolbar-item-label')[1].textContent = translations[selectedLang].timeSliderLabel;
+                document.querySelectorAll('.toolbar-item-label')[2].textContent = translations[selectedLang].comparisonToolButton;
+                document.querySelectorAll('.toolbar-item-label')[3].textContent = translations[selectedLang].languageLabel;
+
+                // Update select options
+                const layerSelector = document.getElementById('layer-selector');
+                layerSelector.options[0].text = translations[selectedLang].layerSelectorLabel + " - Total Virus Count";
+                layerSelector.options[1].text = translations[selectedLang].layerSelectorLabel + " - Virus Family Distribution";
+
+                // Update year label
+                document.getElementById('year-label').textContent = translations[selectedLang].timeSliderLabel + " " + document.getElementById('time-slider').value;
+
+                // Update button text
+                document.querySelector('.toolbar button').textContent = translations[selectedLang].comparisonToolButton;
+            }
+
+            document.getElementById('time-slider').addEventListener('input', function() {
+                const year = this.value;
+                document.getElementById('year-label').textContent = translations[document.getElementById('language-selector').value].timeSliderLabel + " " + year;
+                // Here you can add logic to update the map or chart based on the year
+            });
+
+            let comparisonMode = false;
+
+            function toggleComparison() {
+                comparisonMode = !comparisonMode;
+                if (comparisonMode) {
+                    alert(translations[document.getElementById('language-selector').value].comparisonToolButton);
+                    // Here you can add logic to allow selecting countries for comparison
+                } else {
+                    document.getElementById('chart-container').style.display = 'none';
+                }
+            }
+
+            // Initialize language
+            changeLanguage();
+        });
+    </script>
+</body>
+</html>
+
+
+

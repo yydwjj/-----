@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>互动地图展示</title>
+    <style>
+        /* 全局重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+        }
+
+        /* 导航栏样式 */
+        nav {
+            background-color: #d5ebf3;
+            color: white;
+            padding: 10px 0;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav ul li {
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        nav ul li:hover {
+            background-color: #555;
+        }
+
+        /* 地图页面容器样式 */
+        #map-content {
+            display: block;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* 地图容器样式 */
+       .map-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+            background-color: white;
+            
+            margin: 0 auto;
+            max-width: 90%;
+            max-height: 80%;
+            height: 900px;
+            width: 100%;
+            
+        }
+
+        /* 地图标题样式 */
+       .title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* 内嵌地图样式 */
+        #embedded-map {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 5px;
+        }
+
+        /* 病毒图例样式 */
+       .legend {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-top: 10px;
+            width: 200px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <nav>
+        <ul>
+            <li id="home">Home</li>
+            <li id="text1">West Nile virus</li>
+            <li id="text2">Text2</li>
+            <li id="text3">Text3</li>
+        </ul>
+    </nav>
+
+    <!-- 地图页面容器 -->
+    <div id="map-content">
+        <!-- 地图容器 -->
+        <div class="map-container">
+            <!-- 地图标题 -->
+            <div class="title">VirusQuantityHeatMap</div>
+            <!-- 这里嵌入互动地图的代码，比如使用iframe或者其他地图API -->
+            <iframe id="embedded-map" src="major_map.html" width="100%" height="600px"></iframe>
+            <!-- 病毒图例 -->
+            <!-- <div class="legend"></div> -->
+        </div>
+    </div>
+
+    <script>
+        // 获取导航栏元素和地图内容容器元素以及内嵌地图的iframe元素
+        const navItems = document.querySelectorAll('nav ul li');
+        const mapContent = document.getElementById('map-content');
+        const embeddedMap = document.getElementById('embedded-map');
+
+        // 给导航栏每个选项添加点击事件监听器
+        navItems.forEach((item) => {
+            item.addEventListener('click', () => {
+                // 隐藏所有地图内容
+                mapContent.style.display = 'none';
+
+                // 根据点击的选项显示相应的地图内容
+                if (item.id === 'home') {
+                    mapContent.style.display = 'block';
+                    // 这里可以添加Home页面的显示逻辑，比如跳转到其他页面或者显示特定内容
+                    document.querySelector('.title').innerHTML = 'VirusQuantityHeatMap';
+                        // document.querySelector('.legend').innerHTML = '';
+                        embeddedMap.src = 'major_map.html';
+                    // console.log('Home页面被点击');
+                } else {
+                    // 显示地图内容
+                    mapContent.style.display = 'block';
+
+                    // 根据不同选项更新地图标题、图例内容以及内嵌网页的src属性
+                    if (item.id === 'text1') {
+                        document.querySelector('.title').innerHTML = 'West Nile virus Spot Map';
+                        // document.querySelector('.legend').innerHTML = '';
+                        embeddedMap.src = 'virus_distribution_combined_map_colorful.html';
+                    } else if (item.id === 'text2') {
+                        document.querySelector('.title').innerHTML = 'West Nile virus SpotMap';
+                        // document.querySelector('.legend').innerHTML = 'Text2病毒图例内容';
+                        embeddedMap.src = 'virus_distribution_combined_map_colorful.html';
+                    } else if (item.id === 'text3') {
+                        document.querySelector('.title').innerHTML = 'West Nile virus SpotMap';
+                        // document.querySelector('.legend').innerHTML = 'Text3病毒图例内容';
+                        embeddedMap.src = 'virus_distribution_combined_map_colorful.html';
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
