@@ -279,11 +279,8 @@
             iframe.src = selector.value;
         }
 
-        window.onload = function() {
-            // 监听 select 元素的变化事件
             var selector = document.getElementById('layer-selector');
             selector.addEventListener('change', updateIframeSrc);
-        }
 
         // Initialize language
         changeLanguage();
