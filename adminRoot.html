@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virus World Map | AI-Driven Knowledge-Data Graphs for Tracking Global Arbovirus Research</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            min-width: 800px;
+            min-height: 600px;
+            display: flex;
+        }
+        .toolbar {
+            width: 20%; /* 2/10 of the container width */
+            max-width: 250px; /* Maximum width for the toolbar */
+            padding: 20px;
+            background-color: #fff;
+            border-right: 1px solid #ddd;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: stretch;
+        }
+        .toolbar-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .toolbar-item {
+            border: 1px solid #e0e0eb;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .toolbar-item-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .toolbar select, .toolbar input[type="range"], .toolbar button, .toolbar select.language-select {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .content {
+            width: 80%; /* 8/10 of the container width */
+            height: 100%;
+            position: relative;
+        }
+        #map-container {
+            width: 100%;
+            height: 100%;
+            background-color: #e0e0eb; /* Pure color block representing the map */
+        }
+        #chart-container {
+            width: 100%;
+            padding: 20px;
+            display: none;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        /* 模态框背景 */
+        .modal {
+            display: none; /* 默认隐藏 */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        /* 模态框内容 */
+        .modal-content {
+            background-color: #ebe9e9;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 70%; /* 可以根据需要调整 */
+        }
+
+        /* 关闭按钮 */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <div class="toolbar-title"></div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Layer Selector</div>
+                <select id="layer-selector">
+                    <option value="major_map.html">Total Virus Count Layer</option>
+                    <option value="West Nile Virus.html">West Nile Virus</option>
+                    <option value="Japanese encephalitis virus.html">Japanese Encephalitis Virus</option>
+                    <option value="Bluetongue virus.html">Bluetongue Virus</option>
+                    <option value="Tick-borne encephalitis virus.html">Tick-borne Encephalitis Virus</option>
+                    <option value="Chikungunya virus.html">Chikungunya Virus</option>
+                    <option value="Usutu virus.html">Usutu Virus</option>
+                </select>
+            </div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Time Slider</div>
+                <input type="range" id="time-slider" min="1960" max="2020" value="2020">
+                <span id="year-label">2020</span>
+            </div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Comparison Tool</div>
+                <button onclick="toggleComparison()">Comparison Tool</button>
+            </div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Language</div>
+                <select class="language-select" id="language-selector" onchange="changeLanguage()">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+            </div>
+            <div class="toolbar-item">
+                <div class="toolbar-item-label">Info</div>
+                <button id="info-button">Info</button>
+            </div>
+        </div>
+
+        <!-- 模态框 -->
+        <div id="info-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>About</h2>
+                <!-- <p>You can use the Layer Selector to view different data. The Comparison Tool and Time Slider features are still under development.</p> -->
+                 <!-- 事项 -->
+                <p><strong>Platform Name:</strong><br>Virus Map</p>
+                <p>
+                    <strong>Purpose:</strong><br>This platform is designed as a supplementary tool for the paper "AI-Driven Knowledge-Data Graphs for Tracking Global Arbovirus Research," providing an interactive way to explore and analyze the core datasets.<br>
+                </p>
+                <p>
+                    <strong>Data sources  :</strong><br>The data presented on this platform is derived from approximately 70,000 articles, which form the core dataset of our research. These articles were analyzed by Deepseek and are categorized into two major groups (GRP1).<br>
+                </p>
+                <p>
+                    <strong>Data Time Range   :</strong><br> 1970 - 2024<br>
+                </p>
+                <p>
+                    <strong>Last updated    :</strong><br> 2024-12-20<br>
+                </p>
+                <p>
+                    <strong>Features:</strong>
+                    <ul>
+                        <li><strong>Layer Selector:</strong>Allows users to view different data layers, such as total virus count and virus family distribution.</li>
+                        <li><strong>Comparison Tool:</strong>(Under Development) Will enable users to compare multiple datasets side-by-side.</li>
+                        <li><strong>Time Slider:</strong>(Under Development) Will allow users to explore data trends over time.</li>
+                        <li><strong>Language Selector:</strong>Provides options for viewing the platform in English or Chinese.</li>
+                    </ul>
+                </p>
+                <p>
+                    <strong>Important Information</strong>
+                    <ul>
+                        <li>The Comparison Tool and Time Slider features are currently under development and may not be fully functional at this time.</li>
+                        <li>For any inquiries or feedback, please contact [guoweijin500@gmail.com].</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="map-container">
+                <iframe id="embedded-map" src="major_map.html" width="100%" height="100%"></iframe>
+            </div>
+            <div id="chart-container">
+                <canvas id="comparison-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                title: "Virus Map | AI-Driven Knowledge-Data Graphs for Tracking Global Arbovirus Research",
+                layerSelectorLabel: "Layer Selector",
+                timeSliderLabel: "Time Slider",
+                comparisonToolButton: "Comparison Tool",
+                languageLabel: "Language",
+                info:"Information"
+
+            },
+            zh: {
+                title: "病毒地图 | AI-Driven Knowledge-Data Graphs for Tracking Global Arbovirus Research",
+                layerSelectorLabel: "图层选择器",
+                timeSliderLabel: "时间滑块",
+                comparisonToolButton: "比较工具",
+                languageLabel: "语言",
+                info:"相关信息"
+            }
+        };
+
+        function changeLanguage() {
+            const selectedLang = document.getElementById('language-selector').value;
+            document.title = translations[selectedLang].title;
+
+            // Update labels
+            document.querySelectorAll('.toolbar-item-label')[0].textContent = translations[selectedLang].layerSelectorLabel;
+            document.querySelectorAll('.toolbar-item-label')[1].textContent = translations[selectedLang].timeSliderLabel;
+            document.querySelectorAll('.toolbar-item-label')[2].textContent = translations[selectedLang].comparisonToolButton;
+            document.querySelectorAll('.toolbar-item-label')[3].textContent = translations[selectedLang].languageLabel;
+            document.querySelectorAll('.toolbar-item-label')[4].textContent = translations[selectedLang].info;
+
+            // Update select options
+            const layerSelector = document.getElementById('layer-selector');
+            layerSelector.options[0].text = "Total Virus Count";
+            //layerSelector.options[1].text = translations[selectedLang].layerSelectorLabel + " - Virus Family Distribution";
+
+            // Update year label
+            document.getElementById('year-label').textContent = translations[selectedLang].timeSliderLabel + " " + document.getElementById('time-slider').value;
+
+            // Update button text
+            document.querySelector('.toolbar button').textContent = translations[selectedLang].comparisonToolButton;
+        }
+
+        document.getElementById('time-slider').addEventListener('input', function() {
+            const year = this.value;
+            document.getElementById('year-label').textContent = translations[document.getElementById('language-selector').value].timeSliderLabel + " " + year;
+            // Here you can add logic to update the map or chart based on the year
+        });
+
+        let comparisonMode = false;
+
+        function toggleComparison() {
+            comparisonMode = !comparisonMode;
+            if (comparisonMode) {
+                alert(translations[document.getElementById('language-selector').value].comparisonToolButton+"are currently under development");
+                // Here you can add logic to allow selecting countries for comparison
+            } else {
+                document.getElementById('chart-container').style.display = 'none';
+            }
+        }
+
+        function updateIframeSrc() {
+            // 获取 select 元素
+            var selector = document.getElementById('layer-selector');
+            // 获取 iframe 元素
+            var iframe = document.getElementById('embedded-map');
+            // 更新 iframe 的 src 属性为 select 中选中的 value
+            iframe.src = selector.value;
+        }
+
+        window.onload = function() {
+            // 监听 select 元素的变化事件
+            var selector = document.getElementById('layer-selector');
+            selector.addEventListener('change', updateIframeSrc);
+        }
+
+        // Initialize language
+        changeLanguage();
+    </script>
+    <!-- 提示信息 -->
+    <script>
+        // 获取模态框元素
+        var modal = document.getElementById("info-modal");
+
+        // 获取打开模态框的按钮
+        var infoButton = document.getElementById("info-button");
+
+        // 获取关闭模态框的元素
+        var span = document.getElementsByClassName("close")[0];
+
+        // 当点击按钮时，打开模态框
+        infoButton.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // 当点击关闭按钮时，关闭模态框
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // 当用户点击模态框外部时，关闭模态框
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
